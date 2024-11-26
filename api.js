@@ -7,6 +7,11 @@ function execLua(param) {
     console.log(luaScript.exec());
 }
 
+function execLua_return(param) {
+    const luaScript = luaEnv.parse(param);
+    return luaScript.exec();
+}
+
 function execLuaFile(param) {
     const luaScript = luaEnv.parseFile(param);
     console.log(luaScript.exec());
