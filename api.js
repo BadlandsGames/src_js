@@ -7,6 +7,23 @@ function execLua(param) {
     console.log(luaScript.exec());
 }
 
+function setupNextbot(base, model, init_func) {
+    const newlib = init_func().name.toString() + getRandomIntInclusive(1000, 9999).toString();
+    eval(`
+    const ` + newlib + ` = new luainjs.Table({` + init_func().name.toString() + `});
+    luaEnv.loadLib('` + newlib + `', ` + newlib + `);
+    `);
+    luaExec("AddCSLuaFile()");
+    luaExec(`ENT.Base = "` + base + `"`);
+    luaExec("ENT.Spawnable = true");
+    luaExec(`
+    function ENT:Initialize()
+        self:SetModel("` + model + `")
+        `+ newlib + '.' + init_func().name + `
+    end
+    `);
+}
+
 function execLua_return(param) {
     const luaScript = luaEnv.parse(param);
     return luaScript.exec();
