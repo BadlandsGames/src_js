@@ -7,18 +7,22 @@ function execLua(param) {
     console.log(luaScript.exec());
 }
 
-function setupNextbot(base, model, init_func) {
+function setup_lua_func(input_func, param) {
     const newlib = init_func().name.toString() + getRandomIntInclusive(1000, 9999).toString();
     eval(`
     const ` + newlib + ` = new luainjs.Table({` + init_func().name.toString() + `});
     luaEnv.loadLib('` + newlib + `', ` + newlib + `);
     `);
+    return (newlib + '.' + input_func().name + '(' + param + ')');
+}
+
+function setupNextbot(name, __class__, category, base, model, init_func, have_enemy_func, find_enemy_func, chase_enemy_func, update_func) {
     execLua("AddCSLuaFile()");
     execLua(`ENT.Base = "` + base + `"`);
     execLua("ENT.Spawnable = true");
     execLua(`function ENT:Initialize()
         self:SetModel("` + model + `")
-        `+ newlib + '.' + init_func().name + `
+        ` + setup_lua_func(init_func) + `
     end
     `);
     execLua(`function ENT:SetEnemy(ent)
@@ -27,7 +31,27 @@ function setupNextbot(base, model, init_func) {
     function ENT:GetEnemy()
         return self.Enemy
     end`);
-    if(base === "base_nextbot") execLuaFile("have_enemy.lua");
+    execLua(`function ENT:HaveEnemy()
+        ` + setup_lua_func(have_enemy_func) + `
+    end
+    `);
+    execLua(`function ENT:FindEnemy()
+        ` + setup_lua_func(find_enemy_func) + `
+    end
+    `);
+    execLua(`function ENT:ChaseEnemy()
+        ` + setup_lua_func(chase_enemy_func) + `
+    end
+    `);
+    execLua(`function ENT:RunBehaviour()
+        ` + setup_lua_func(update_func) + `
+    end
+    `);
+    execLua(`list.Set("NPC", "` + __class__ + `", {
+	    Name = "` + name + `",
+	    Class = "` + __class__ + `",
+	    Category = "` + category + `"
+    })`);
 }
 
 function execLua_return(param) {
@@ -66,16 +90,11 @@ function getRandomIntInclusive(min, max) {
 }
 
 function lua_hook(event_name_official, hook_name, func_equivalent) {
-    const newlib = func_equivalent().name.toString() + getRandomIntInclusive(1000, 9999).toString();
-    eval(`
-    const ` + newlib + ` = new luainjs.Table({` + func_equivalent().name.toString() + `});
-    luaEnv.loadLib('` + newlib + `', ` + newlib + `);
-    `);
     execLua(`
     require("gameevent")
     gameevent.Listen("` + event_name_official + `")
     hook.Add("` + event_name_official + `", "` + hook_name + `", function(data)
-        ` + newlib + '.' + func_equivalent().name + `()
+        ` + setup_lua_func(func_equivalent) + `
     end
     `);
 }
