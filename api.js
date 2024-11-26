@@ -16,6 +16,10 @@ function setup_lua_func(input_func, param) {
     return (newlib + '.' + input_func().name + '(' + param + ')');
 }
 
+function get_lua_func(func_name, func_param) {
+    execLua(func_name + '(' + func_param + ')');
+}
+
 function setupNextbot(name, __class__, category, base, model, init_func, have_enemy_func, find_enemy_func, chase_enemy_func, update_func) {
     execLua("AddCSLuaFile()");
     execLua(`ENT.Base = "` + base + `"`);
