@@ -12,10 +12,6 @@ function execLuaFile(param) {
     console.log(luaScript.exec());
 }
 
-function runLuaFunc(name, param) {
-    execLua(name + '(' + param + ')');
-}
-
 function getRandomIntInclusive(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
@@ -23,8 +19,6 @@ function getRandomIntInclusive(min, max) {
 }
 
 function lua_hook(event_name_official, hook_name, func_param, func_equivalent) {
-    // const myLib = new luainjs.Table({ helloBuilder })
-    // luaEnv.loadLib('myLib', myLib)
     const newlib = func_equivalent().name.toString() + getRandomIntInclusive(1000, 9999).toString();
     eval(`
     const ` + newlib + ` = new luainjs.Table({` + func_equivalent().name.toString() + `});
