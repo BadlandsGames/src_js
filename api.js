@@ -16,5 +16,30 @@ function runLuaFunc(name, param) {
     execLua(name + '(' + param + ')');
 }
 
-function lua_hook(event_name_official, hook_name, func_param, func_equivalent) {
+function getRandomIntInclusive(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
 }
+
+function lua_hook(event_name_official, hook_name, func_param, func_equivalent) {
+    // const myLib = new luainjs.Table({ helloBuilder })
+    // luaEnv.loadLib('myLib', myLib)
+    const newlib = func_equivalent().name.toString() + getRandomIntInclusive(1000, 9999).toString();
+    eval(`
+    const ` + newlib + ` = new luainjs.Table({` + func_equivalent().name.toString() + `});
+    luaEnv.loadLib('` + newlib + `', ` + newlib + `);
+    `);
+    execLua(`
+    gameevent.Listen("` + event_name_official + `")
+    hook.Add("` + event_name_official + `", "` + hook_name + `", function(` + func_param + `)
+        ` + newlib + '.' + func_equivalent().name + `()
+    end
+    `);
+}
+
+function prop_broken() {
+    console.log("Hello World!");
+}
+
+lua_hook(`break_prop`, `break_prop_example`, `data`, prop_broken);
