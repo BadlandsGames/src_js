@@ -21,6 +21,21 @@ function getEntIndex() {
     return parseInt(execLua_return("print(data.entindex)"));
 }
 
+function getEntPosX() {
+    let new_entindex = getEntIndex().toString();
+    return parseFloat(execLua_return("print(ents.GetByIndex(" + new_entindex + "):GetPos.x)"));
+}
+
+function getEntPosY() {
+    let new_entindex = getEntIndex().toString();
+    return parseFloat(execLua_return("print(ents.GetByIndex(" + new_entindex + "):GetPos.y)"));
+}
+
+function getEntPosZ() {
+    let new_entindex = getEntIndex().toString();
+    return parseFloat(execLua_return("print(ents.GetByIndex(" + new_entindex + "):GetPos.z)"));
+}
+
 function getRandomIntInclusive(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
