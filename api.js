@@ -15,3 +15,6 @@ function execLuaFile(param) {
 function runLuaFunc(name, param) {
     execLua(name + '(' + param + ')');
 }
+
+function lua_hook(event_name_official, hook_name, func_param, func_equivalent) {
+}
