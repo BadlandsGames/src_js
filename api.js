@@ -25,15 +25,10 @@ function lua_hook(event_name_official, hook_name, func_param, func_equivalent) {
     luaEnv.loadLib('` + newlib + `', ` + newlib + `);
     `);
     execLua(`
+    require("gameevent")
     gameevent.Listen("` + event_name_official + `")
     hook.Add("` + event_name_official + `", "` + hook_name + `", function(` + func_param + `)
         ` + newlib + '.' + func_equivalent().name + `()
     end
     `);
 }
-
-function prop_broken() {
-    console.log("Hello World!");
-}
-
-lua_hook(`break_prop`, `break_prop_example`, `data`, prop_broken);
