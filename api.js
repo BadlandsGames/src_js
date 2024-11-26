@@ -13,15 +13,21 @@ function setupNextbot(base, model, init_func) {
     const ` + newlib + ` = new luainjs.Table({` + init_func().name.toString() + `});
     luaEnv.loadLib('` + newlib + `', ` + newlib + `);
     `);
-    luaExec("AddCSLuaFile()");
-    luaExec(`ENT.Base = "` + base + `"`);
-    luaExec("ENT.Spawnable = true");
-    luaExec(`
-    function ENT:Initialize()
+    execLua("AddCSLuaFile()");
+    execLua(`ENT.Base = "` + base + `"`);
+    execLua("ENT.Spawnable = true");
+    execLua(`function ENT:Initialize()
         self:SetModel("` + model + `")
         `+ newlib + '.' + init_func().name + `
     end
     `);
+    execLua(`function ENT:SetEnemy(ent)
+        self.Enemy = ent
+    end
+    function ENT:GetEnemy()
+        return self.Enemy
+    end`);
+    if(base === "base_nextbot") execLuaFile("have_enemy.lua");
 }
 
 function execLua_return(param) {
