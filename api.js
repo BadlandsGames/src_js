@@ -17,13 +17,17 @@ function execLuaFile(param) {
     console.log(luaScript.exec());
 }
 
+function getEntIndex() {
+    return parseInt(execLua_return("print(data.entindex)"));
+}
+
 function getRandomIntInclusive(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function lua_hook(event_name_official, hook_name, func_param, func_equivalent) {
+function lua_hook(event_name_official, hook_name, func_equivalent) {
     const newlib = func_equivalent().name.toString() + getRandomIntInclusive(1000, 9999).toString();
     eval(`
     const ` + newlib + ` = new luainjs.Table({` + func_equivalent().name.toString() + `});
@@ -32,7 +36,7 @@ function lua_hook(event_name_official, hook_name, func_param, func_equivalent) {
     execLua(`
     require("gameevent")
     gameevent.Listen("` + event_name_official + `")
-    hook.Add("` + event_name_official + `", "` + hook_name + `", function(` + func_param + `)
+    hook.Add("` + event_name_official + `", "` + hook_name + `", function(data)
         ` + newlib + '.' + func_equivalent().name + `()
     end
     `);
