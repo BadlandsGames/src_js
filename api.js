@@ -38,7 +38,6 @@ class api_vec3 {
 
 function raycast_entity_weapon(distance_input) {
     let new_entindex = getEntIndex().toString();
-    // return parseFloat(execLua_return("print(ents.GetByIndex(" + new_entindex + "))"));
     return createRaycast(execLua_return(`print(ents.GetByIndex(` + new_entindex + `):GetActiveWeapon())`), distance_input);
 }
 
