@@ -36,7 +36,7 @@ class api_vec3 {
     }
 }
 
-function distance3D(vector_1, vector_2) {
+function vec3_distance(vector_1, vector_2) {
     let x1 = vector_1.x;
     let y1 = vector_1.y;
     let z1 = vector_1.z;
