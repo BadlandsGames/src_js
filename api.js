@@ -2,8 +2,20 @@ const luainjs = require('lua-in-js');
 
 const luaEnv = luainjs.createEnv();
 
+execLuaFile("utils.lua");
+
 function execLua(param) {
     const luaScript = luaEnv.parse(param);
+    console.log(luaScript.exec());
+}
+
+function execLua_return(param) {
+    const luaScript = luaEnv.parse(param);
+    return luaScript.exec();
+}
+
+function execLuaFile(param) {
+    const luaScript = luaEnv.parseFile(param);
     console.log(luaScript.exec());
 }
 
@@ -16,7 +28,43 @@ function setup_lua_func(input_func, param) {
     return (newlib + '.' + input_func().name + '(' + param + ')');
 }
 
+class api_vec3 {
+    constructor(x, y, z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+}
+
+function distance3D(vector_1, vector_2) {
+    let x1 = vector_1.x;
+    let y1 = vector_1.y;
+    let z1 = vector_1.z;
+    let x2 = vector_2.x;
+    let y2 = vector_2.y;
+    let z2 = vector_2.z;
+    const a = x2 - x1;
+    const b = y2 - y1;
+    const c = z2 - z1;
+    return Math.sqrt(a * a + b * b + c * c);
+}
+
+function createRaycast(entity_input, distance_input) {
+    let param = entity_input.toString() + ',' + distance_input.toString();
+    let array_cast = [
+        parseFloat(get_lua_func_return(`utils_createRaycast_x`, param)),
+        parseFloat(get_lua_func_return(`utils_createRaycast_y`, param)),
+        parseFloat(get_lua_func_return(`utils_createRaycast_z`, param))
+    ];
+    let finished_vector = new api_vec3(array_cast[0], array_cast[1], array_cast[2]);
+    return finished_vector;
+}
+
 function get_lua_func(func_name, func_param) {
+    execLua(func_name + '(' + func_param + ')');
+}
+
+function get_lua_func_return(func_name, func_param) {
     execLua(func_name + '(' + func_param + ')');
 }
 
@@ -56,16 +104,6 @@ function setupNextbot(name, __class__, category, base, model, init_func, have_en
 	    Class = "` + __class__ + `",
 	    Category = "` + category + `"
     })`);
-}
-
-function execLua_return(param) {
-    const luaScript = luaEnv.parse(param);
-    return luaScript.exec();
-}
-
-function execLuaFile(param) {
-    const luaScript = luaEnv.parseFile(param);
-    console.log(luaScript.exec());
 }
 
 function getEntIndex() {
