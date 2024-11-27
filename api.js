@@ -57,9 +57,9 @@ function vec3_distance(vector_1, vector_2) {
 
 function get_player_position() {
     let player_pos_return = new api_vec3(
-        parseFloat(execLua_return("Entity(1):GetPos().x")),
-        parseFloat(execLua_return("Entity(1):GetPos().y")),
-        parseFloat(execLua_return("Entity(1):GetPos().z"))
+        parseFloat(execLua_return("print(Entity(1):GetPos().x)")),
+        parseFloat(execLua_return("print(Entity(1):GetPos().y)")),
+        parseFloat(execLua_return("print(Entity(1):GetPos().z)"))
     );
     return player_pos_return;
 }
@@ -154,4 +154,8 @@ function lua_hook(event_name_official, hook_name, func_equivalent) {
         ` + setup_lua_func(func_equivalent) + `
     end
     `);
+}
+
+function server_console(cmd_name, cmd_param_array) {
+    execLua(`RunConsoleCommand("` + cmd_name + `", "` + cmd_param_array.toString().replaceAll(',', '","') + `")`);
 }
