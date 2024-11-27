@@ -41,6 +41,10 @@ function raycast_entity_weapon(distance_input) {
     return createRaycast(execLua_return(`print(ents.GetByIndex(` + new_entindex + `):GetActiveWeapon())`), distance_input);
 }
 
+function getFPS() {
+    return parseInt(execLua_return("print(1 / FrameTime())"));
+}
+
 function vec3_distance(vector_1, vector_2) {
     let x1 = vector_1.x;
     let y1 = vector_1.y;
