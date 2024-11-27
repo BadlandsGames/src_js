@@ -36,6 +36,12 @@ class api_vec3 {
     }
 }
 
+function raycast_entity_weapon(distance_input) {
+    let new_entindex = getEntIndex().toString();
+    // return parseFloat(execLua_return("print(ents.GetByIndex(" + new_entindex + "))"));
+    return createRaycast(execLua_return(`print(ents.GetByIndex(` + new_entindex + `):GetActiveWeapon())`), distance_input);
+}
+
 function vec3_distance(vector_1, vector_2) {
     let x1 = vector_1.x;
     let y1 = vector_1.y;
@@ -47,6 +53,15 @@ function vec3_distance(vector_1, vector_2) {
     const b = y2 - y1;
     const c = z2 - z1;
     return Math.sqrt(a * a + b * b + c * c);
+}
+
+function get_player_position() {
+    let player_pos_return = new api_vec3(
+        parseFloat(execLua_return("Entity(1):GetPos().x")),
+        parseFloat(execLua_return("Entity(1):GetPos().y")),
+        parseFloat(execLua_return("Entity(1):GetPos().z"))
+    );
+    return player_pos_return;
 }
 
 function createRaycast(entity_input, distance_input) {
