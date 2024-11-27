@@ -1,4 +1,6 @@
 import os
 import sys
 
-os.system("npm coffee " + sys.argv[1] + " -o " + sys.argv[2])
+file_name = sys.argv[1]
+
+os.system("npm coffee " + file_name + " -o " + file_name.split(".")[0] + ".js")
